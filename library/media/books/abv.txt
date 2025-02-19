@@ -1,0 +1,157 @@
+#include <fstream>
+ 
+using namespace std;
+ 
+struct  vine{
+    string name;
+    int year;
+    string country;
+    int price;
+};
+ 
+string name;
+ 
+int menu(){
+    int i;
+    cout<<"1. Ввод имени файла."<<endl;
+    cout<<"2. Создание файла."<<endl;
+    cout<<"3. Заполнение данных о вине."<<endl;
+    cout<<"4. Запись данных в файл."<<endl;
+    cout<<"5. Чтение всего файла."<<endl;
+    cout<<"6. Вывести результаты по условию в консоль."<<endl;
+    cout<<"7. Вывести результаты по условию в файл."<<endl;
+    cout<<"0. Выйти из программы.";
+    cin>>i;
+    return i;
+}
+ 
+void namingFile(){
+    cout<<endl<<"Введите имя файла: ";
+    cin>>name;
+    name+=".txt";
+    cout<<"Файл назван успешно\n";
+}
+ 
+void createFile(){
+    ofstream file(name);
+    if(!file){
+        cout<<"Ошибка при создании файла\n";
+    }else{
+        cout<<"Файл создан успешно\n";
+        file.close();
+    }
+}
+ 
+void fill(vine * num, int number){
+    cout<<endl<<endl;
+    for(int i = 0; i<number; i++){
+        cout<<"Введите данные о вине "<<i+1<<endl;
+        cout<<"Введите наименование вина: ";
+        cin>>num[i].name;
+        cout<<endl<<"Введите год вина: ";
+        cin>>num[i].year;
+        cout<<endl<<"Введите страну происхождения вина: ";
+        cin>>num[i].country;
+        cout<<endl<<"Введите цену вина: ";
+        cin>>num[i].price;
+    }
+    cout<<endl<<"Данные о вине заполнены успешно"<<endl;
+}
+ 
+void writingInFile(vine * num, int number){
+    ofstream file(name);
+ 
+    if(!file){
+        cout<<"Ошибка в открытии файла\n";
+    }else{
+        cout<<"Файл открыт успешно\n";
+    }
+ 
+    for(int i = 0; i<number; i++){
+        file<<"Вино № "<<i+1<<endl;
+        file<<"Название вина: "<<num[i].name<<endl;
+        file<<"Год вина: "<<num[i].year<<endl;
+        file<<"Страна происхождения вина: "<<num[i].country<<endl;
+        file<<"Цена вина: "<<num[i].price<<endl;
+    }
+    cout<<"Данные в файл занесены успешно"<<endl;
+    file.close();
+}
+ 
+void readingFile(vine * num, int number){
+    string line;
+    ifstream file(name);
+    if(file.is_open()){
+        while(getline(file, line)){
+            cout<<line<<endl;
+        }
+    }else{
+        cout<<"Ошибка при открытии файла"<<endl;
+    }
+    file.close();
+}
+ 
+void showResultInConsole(vine * num, int number){
+    cout<<"Вина, стоимость которых больше 10.000: "<<endl;
+    bool found = false;
+    for(int i = 0; i<number; i++){
+        if(num[i].price > 10000){
+            found = true;
+            cout<<"Вино № "<<i+1<<endl;
+            cout<<"Наименование вина: "<<num[i].name<<endl;
+        }
+    }
+    if(!found){
+        cout<<"Такого вина не найдено"<<endl;
+    }
+}
+ 
+void showResultInFile(vine * num, int number){
+    ofstream file(name);
+    if(!file){
+        cout<<"Ошибка при открытии файла\n";
+    }else{
+        cout<<"Файл открыт успешно\n";
+    }
+    file<<endl;
+    file<<"Вина, стоимость которых больше 10.000: "<<endl;
+    bool found = false;
+    for(int i = 0; i<number; i++){
+        if(num[i].price > 10000){
+            found = true;
+            file<<"Вино № "<<i+1<<endl;
+            file<<"Наименование вина: "<<num[i].name<<endl;
+        }
+    }
+    if(!found){
+        cout<<"Такого вина не найдено"<<endl;
+    }
+    cout<<"Данные записаны в файл успешно!\n";
+    file.close();
+}
+ 
+int main()
+{
+    int number;
+    cout<<"Введите кол-во вина: ";
+    cin>>number;
+ 
+    vine* num = new vine[number];
+ 
+    bool flag = true;
+ 
+    while(flag){
+        switch(menu()){
+            case 0: return 0;
+            case 1: namingFile(); break;
+            case 2: createFile(); break;
+            case 3: fill(num, number); break;
+            case 4: writingInFile(num, number); break;
+            case 5: readingFile(num,number); break;
+            case 6: showResultInConsole(num,number); break;
+            case 7: showResultInFile(num,number); break;
+        }
+    }
+ 
+    return 0;
+}
